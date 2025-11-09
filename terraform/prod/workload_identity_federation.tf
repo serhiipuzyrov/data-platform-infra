@@ -4,9 +4,18 @@ resource "google_service_account" "terraform_sa" {
   display_name = "Terraform GitHub Actions Service Account"
 }
 
-resource "google_project_iam_member" "terraform_sa_editor" {
+locals {
+  terraform_sa_roles = [
+    "roles/editor",
+    "roles/resourcemanager.projectIamAdmin",
+    "roles/iam.serviceAccountAdmin",
+    "roles/iam.serviceAccountKeyAdmin",
+  ]
+}
+resource "google_project_iam_member" "terraform_sa_roles" {
+  for_each = toset(local.terraform_sa_roles)
   project = var.project_id
-  role    = "roles/editor"
+  role    = each.value
   member  = "serviceAccount:${google_service_account.terraform_sa.email}"
 }
 
