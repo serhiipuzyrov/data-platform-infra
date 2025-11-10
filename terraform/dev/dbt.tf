@@ -14,6 +14,7 @@ locals {
     "roles/bigquery.jobUser",
     "roles/storage.objectViewer",
   ]
+}
 
 # Grant BQ permissions
 resource "google_project_iam_member" "dbt_sa_roles" {
