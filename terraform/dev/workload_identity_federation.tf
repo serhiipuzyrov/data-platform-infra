@@ -10,8 +10,6 @@ locals {
     "roles/resourcemanager.projectIamAdmin",
     "roles/iam.serviceAccountAdmin",
     "roles/iam.serviceAccountKeyAdmin",
-    "roles/iam.serviceAccountTokenCreator",
-    "roles/iam.workloadIdentityPoolAdmin"
   ]
 }
 resource "google_project_iam_member" "terraform_sa_roles" {
@@ -26,7 +24,6 @@ resource "google_iam_workload_identity_pool" "github_pool" {
   workload_identity_pool_id = "github-actions-pool"
   display_name              = "GitHub Actions Pool"
   description               = "OIDC pool for GitHub Actions"
-  depends_on = [google_project_iam_member.terraform_sa_roles]
 }
 
 # Workload Identity Provider (GitHub)
@@ -47,10 +44,6 @@ resource "google_iam_workload_identity_pool_provider" "github_provider" {
   }
   # Add attribute condition to restrict to your repository
   attribute_condition = "assertion.repository == '${var.github_org}/${var.github_repo}'"
-  depends_on = [
-    google_iam_workload_identity_pool.github_pool,
-    google_project_iam_member.terraform_sa_roles
-  ]
 }
 
 # Allow only your repo to impersonate the terraform-sa
