@@ -51,9 +51,6 @@ jobs:
           workload_identity_provider: "projects/${{ env.PROJECT_NUMBER }}/locations/global/workloadIdentityPools/github-actions-pool/providers/github-provider"
           service_account: "terraform-sa@${{ env.PROJECT_ID }}.iam.gserviceaccount.com"
 
-      - name: Check Service Account
-        run: gcloud auth list && gcloud config get-value auth/impersonate_service_account
-
       - name: Initialize Terraform
         working-directory: ${{ env.TF_WORKING_DIR }}
         run: terraform init
