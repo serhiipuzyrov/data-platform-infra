@@ -23,6 +23,7 @@ resource "google_project_iam_member" "terraform_sa_roles" {
 
 # Workload Identity Pool
 resource "google_iam_workload_identity_pool" "github_pool" {
+  project = var.project_id
   workload_identity_pool_id = "github-actions-pool"
   display_name              = "GitHub Actions Pool"
   description               = "OIDC pool for GitHub Actions"
@@ -30,6 +31,7 @@ resource "google_iam_workload_identity_pool" "github_pool" {
 
 # Workload Identity Provider (GitHub)
 resource "google_iam_workload_identity_pool_provider" "github_provider" {
+  project = var.project_id
   workload_identity_pool_id          = google_iam_workload_identity_pool.github_pool.workload_identity_pool_id
   workload_identity_pool_provider_id = "github-provider"
   display_name                       = "GitHub Provider"
