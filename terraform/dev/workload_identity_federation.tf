@@ -11,9 +11,12 @@ locals {
     "roles/iam.serviceAccountAdmin",
     "roles/iam.serviceAccountKeyAdmin",
     "roles/iam.workloadIdentityPoolAdmin",
-    "roles/iam.serviceAccountTokenCreator"
+    "roles/iam.serviceAccountTokenCreator",
+    "roles/iam.serviceAccountUser",
+    "roles/storage.admin"
   ]
 }
+
 resource "google_project_iam_member" "terraform_sa_roles" {
   for_each = toset(local.terraform_sa_roles)
   project = var.project_id
@@ -54,6 +57,5 @@ resource "google_iam_workload_identity_pool_provider" "github_provider" {
 resource "google_service_account_iam_member" "github_wif_binding" {
   service_account_id = google_service_account.terraform_sa.name
   role               = "roles/iam.workloadIdentityUser"
-  # The attribute below must match the mapping defined above
   member = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.github_pool.name}/attribute.repository/${var.github_org}/${var.github_repo}"
 }
