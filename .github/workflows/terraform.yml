@@ -39,6 +39,8 @@ jobs:
           echo "Project Number: ${{ env.PROJECT_NUMBER }}"
           echo "Terraform Version: ${{ env.TF_VERSION }}"
           echo "================================"
+      - name: Check Service Account
+        run: gcloud auth list && gcloud config get-value auth/impersonate_service_account
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
