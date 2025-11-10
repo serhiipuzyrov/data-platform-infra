@@ -10,6 +10,8 @@ locals {
     "roles/resourcemanager.projectIamAdmin",
     "roles/iam.serviceAccountAdmin",
     "roles/iam.serviceAccountKeyAdmin",
+    "roles/iam.workloadIdentityPoolAdmin",
+    "roles/iam.serviceAccountTokenCreator"
   ]
 }
 resource "google_project_iam_member" "terraform_sa_roles" {
