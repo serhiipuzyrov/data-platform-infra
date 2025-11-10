@@ -15,6 +15,10 @@ locals {
     "roles/iam.serviceAccountUser",
     "roles/storage.admin"
   ]
+  allowed_repositories = [
+    "${var.github_org}/${var.github_repo_infra}",
+    "${var.github_org}/${var.github_repo_dbt}"
+  ]
 }
 
 resource "google_project_iam_member" "terraform_sa_roles" {
@@ -32,7 +36,6 @@ resource "google_iam_workload_identity_pool" "github_pool" {
   description               = "OIDC pool for GitHub Actions"
 }
 
-# Workload Identity Provider (GitHub)
 resource "google_iam_workload_identity_pool_provider" "github_provider" {
   project = var.project_id
   workload_identity_pool_id          = google_iam_workload_identity_pool.github_pool.workload_identity_pool_id
@@ -42,20 +45,20 @@ resource "google_iam_workload_identity_pool_provider" "github_provider" {
   oidc {
     issuer_uri = "https://token.actions.githubusercontent.com"
   }
-  # Only map attributes; do NOT set attribute_condition here
   attribute_mapping = {
     "google.subject"       = "assertion.sub"
     "attribute.actor"      = "assertion.actor"
     "attribute.repository" = "assertion.repository"
     "attribute.ref"        = "assertion.ref"
   }
-  # Add attribute condition to restrict to your repository
-  attribute_condition = "assertion.repository == '${var.github_org}/${var.github_repo}'"
+  # Update attribute condition to allow multiple repositories
+  attribute_condition = "assertion.repository in ['${join("', '", local.allowed_repositories)}']"
 }
 
 # Allow only your repo to impersonate the terraform-sa
 resource "google_service_account_iam_member" "github_wif_binding" {
+  for_each = toset(local.allowed_repositories)
   service_account_id = google_service_account.terraform_sa.name
   role               = "roles/iam.workloadIdentityUser"
-  member = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.github_pool.name}/attribute.repository/${var.github_org}/${var.github_repo}"
+  member = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.github_pool.name}/attribute.repository/${each.value}"
 }

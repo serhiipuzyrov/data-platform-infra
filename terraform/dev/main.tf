@@ -41,9 +41,14 @@ variable "github_org" {
   default = "serhiipuzyrov"
 }
 
-variable "github_repo" {
+variable "github_repo_infra" {
   type    = string
   default = "data-platform-infra"
+}
+
+variable "github_repo_dbt" {
+  type    = string
+  default = "data-platform-dbt"
 }
 
 
