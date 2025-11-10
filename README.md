@@ -14,12 +14,13 @@ This repository provides a ready-to-use infrastructure setup that includes:
 
 ### Global Settings
 
-| Parameter | Value |
-|-----------|-------|
-| **GitHub Account** | `serhiipuzyrov` |
-| **Repository** | `data-platform-infra` |
+| Parameter                | Value                 |
+|--------------------------|-----------------------|
+| **GitHub Account**       | `serhiipuzyrov`       |
+| **Terraform Repository** | `data-platform-infra` |
+| **DBT Repository**       | `data-platform-dbt`   |
 
-### Development Environment
+### GCP Development Environment
 
 | Parameter | Value |
 |-----------|-------|
@@ -28,7 +29,7 @@ This repository provides a ready-to-use infrastructure setup that includes:
 | **Multi-region** | `EU` |
 | **Region** | `europe-central2` |
 
-### Production Environment
+### GCP Production Environment
 
 | Parameter | Value |
 |-----------|-------|
