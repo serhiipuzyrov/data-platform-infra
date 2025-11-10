@@ -20,35 +20,36 @@ terraform {
   }
 }
 
-variable "project_id" {
-  description = "GCP project id"
-  type        = string
-  default     = "data-platform-dev-477621"
+module "bigquery" {
+  source     = "../services/bigquery"
+  project_id = var.project_id
+  multi_region     = var.multi_region
+  region     = var.region
 }
 
-variable "region" {
-  type    = string
-  default = "europe-central2"
+module "dbt" {
+  source     = "../services/dbt"
+  project_id = var.project_id
+  region     = var.region
+  env = var.env
 }
 
-variable "multi_region" {
-  type    = string
-  default = "EU"
+module "iam_users" {
+  source     = "../services/iam_users"
+  project_id = var.project_id
+  region     = var.region
 }
 
-variable "github_org" {
-  type    = string
-  default = "serhiipuzyrov"
+module "workload_identity_federation" {
+  source     = "../services/workload_identity_federation"
+  project_id = var.project_id
+  region     = var.region
+  github_org = var.github_org
+  github_repo_infra = var.github_repo_infra
+  github_repo_dbt = var.github_repo_dbt
 }
 
-variable "github_repo_infra" {
-  type    = string
-  default = "data-platform-infra"
-}
 
-variable "github_repo_dbt" {
-  type    = string
-  default = "data-platform-dbt"
-}
+
 
 
