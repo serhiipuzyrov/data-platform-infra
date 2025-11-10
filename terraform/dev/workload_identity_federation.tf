@@ -9,6 +9,7 @@ locals {
     "roles/editor",
     "roles/resourcemanager.projectIamAdmin",
     "roles/storage.objectAdmin",
+    "roles/iam.serviceAccountTokenCreator",
     "roles/iam.serviceAccountAdmin",
     "roles/iam.serviceAccountKeyAdmin",
   ]
