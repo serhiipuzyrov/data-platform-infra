@@ -1,2 +1,2 @@
-# Re-login with application default credentials
+# Login with application default credentials
 gcloud auth application-default login
