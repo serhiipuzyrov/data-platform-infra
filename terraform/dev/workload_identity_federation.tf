@@ -8,6 +8,7 @@ locals {
   terraform_sa_roles = [
     "roles/editor",
     "roles/resourcemanager.projectIamAdmin",
+    "roles/storage.objectAdmin",
     "roles/iam.serviceAccountAdmin",
     "roles/iam.serviceAccountKeyAdmin",
   ]
