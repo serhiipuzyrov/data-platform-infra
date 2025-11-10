@@ -8,17 +8,18 @@ resource "google_service_account" "dbt_runner" {
   description  = "Service Account for running DBT jobs"
 }
 
-# Grant BQ permissions
-resource "google_project_iam_member" "dbt_bq_writer" {
-  project = var.project_id
-  role    = "roles/bigquery.dataEditor"
-  member  = "serviceAccount:${google_service_account.dbt_runner.email}"
-}
+locals {
+  dbt_sa_roles = [
+    "roles/bigquery.dataEditor",
+    "roles/bigquery.jobUser",
+    "roles/storage.objectViewer",
+  ]
 
-# Optional: grant read access to GCS (for seeds or external tables)
-resource "google_project_iam_member" "dbt_gcs_reader" {
+# Grant BQ permissions
+resource "google_project_iam_member" "dbt_sa_roles" {
+  for_each = toset(local.terraform_sa_roles)
   project = var.project_id
-  role    = "roles/storage.objectViewer"
+  role    = each.value
   member  = "serviceAccount:${google_service_account.dbt_runner.email}"
 }
 
