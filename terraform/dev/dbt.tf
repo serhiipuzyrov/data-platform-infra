@@ -18,7 +18,7 @@ locals {
 
 # Grant BQ permissions
 resource "google_project_iam_member" "dbt_sa_roles" {
-  for_each = toset(local.terraform_sa_roles)
+  for_each = toset(local.dbt_sa_roles)
   project = var.project_id
   role    = each.value
   member  = "serviceAccount:${google_service_account.dbt_runner.email}"
