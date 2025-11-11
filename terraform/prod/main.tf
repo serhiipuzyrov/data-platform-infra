@@ -20,6 +20,11 @@ terraform {
   }
 }
 
+module "project_setup" {
+  source     = "../services/project_setup"
+  project_id = var.project_id
+}
+
 module "bigquery" {
   source     = "../services/bigquery"
   project_id = var.project_id
@@ -32,6 +37,7 @@ module "dbt" {
   project_id = var.project_id
   region     = var.region
   env = var.env
+  depends_on = [module.project_setup]
 }
 
 module "iam_users" {
