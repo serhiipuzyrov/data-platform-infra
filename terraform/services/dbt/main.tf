@@ -46,8 +46,6 @@ resource "google_cloud_run_v2_job" "dbt_job" {
       service_account = google_service_account.dbt_runner.email
       containers {
         image = "${var.region}-docker.pkg.dev/${var.project_id}/${google_artifact_registry_repository.dbt.repository_id}/dbt-image:latest"
-        command = ["dbt"]
-        args    = ["run", "--project-dir", "/dbt_project"]
         env {
           name  = "DBT_PROFILES_DIR"
           value = "/.dbt"
