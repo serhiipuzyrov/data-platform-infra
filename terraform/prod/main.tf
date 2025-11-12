@@ -1,26 +1,3 @@
-
-terraform {
-  required_version = "1.13.5"
-  required_providers {
-    google = {
-      source = "hashicorp/google"
-      version = ">= 4.84.0"
-    }
-  }
-}
-
-provider "google" {
-  project = var.project_id
-  region = var.region
-}
-
-terraform {
-  backend "gcs" {
-    bucket = "tf-state-data-platform-prod-477621"
-    prefix = "terraform/state"
-  }
-}
-
 module "project_setup" {
   source = "../services/project_setup"
   project_id = var.project_id
@@ -52,4 +29,9 @@ module "access_management" {
   github_repo_infra = var.github_repo_infra
   github_repo_dbt = var.github_repo_dbt
   depends_on = [module.project_setup]
+}
+
+module "monitoring" {
+  source = "../services/monitoring"
+  alert_email = var.alert_email
 }

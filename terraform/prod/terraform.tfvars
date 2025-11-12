@@ -1,0 +1,8 @@
+project_id = "data-platform-prod-477621"
+env = "prod"
+multi_region = "EU"
+region = "europe-central2"
+github_org = "serhiipuzyrov"
+github_repo_infra = "data-platform-infra"
+github_repo_dbt = "data-platform-dbt"
+alert_email = ""

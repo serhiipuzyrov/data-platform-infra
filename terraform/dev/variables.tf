@@ -1,35 +1,31 @@
 variable "project_id" {
-  description = "GCP project id"
-  type        = string
-  default     = "data-platform-dev-477621"
+  type = string
 }
 
 variable "env" {
-  type    = string
-  default = "dev"
+  type = string
 }
 
 variable "region" {
-  type    = string
-  default = "europe-central2"
+  type = string
 }
 
 variable "multi_region" {
-  type    = string
-  default = "EU"
+  type = string
 }
 
 variable "github_org" {
-  type    = string
-  default = "serhiipuzyrov"
+  type = string
 }
 
 variable "github_repo_infra" {
-  type    = string
-  default = "data-platform-infra"
+  type = string
 }
 
 variable "github_repo_dbt" {
-  type    = string
-  default = "data-platform-dbt"
+  type = string
+}
+
+variable "alert_email" {
+  type = string
 }
