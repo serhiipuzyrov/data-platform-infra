@@ -15,6 +15,7 @@ This repository provides a ready-to-use infrastructure setup that includes:
 - Multi-environment configuration (dev/prod)
 - DBT infrastructure creation (Cloud Run Jobs & Cloud Scheduler)
 - CI/CD pipeline automation
+- Cloud Monitoring Alerts
 
 ## 🔧 Configuration
 
