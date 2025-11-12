@@ -15,7 +15,7 @@ provider "google" {
 
 terraform {
   backend "gcs" {
-    bucket = "tf-state-data-platform-prod-477621"
+    bucket = var.tf_bucket
     prefix = "terraform/state"
   }
 }
@@ -55,5 +55,5 @@ module "access_management" {
 
 module "monitoring" {
   source = "../services/monitoring"
-  alert_email = "serhii.puzyrov@gmail.com"
+  alert_email = var.alert_email
 }
