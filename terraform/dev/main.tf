@@ -15,7 +15,7 @@ provider "google" {
 
 terraform {
   backend "gcs" {
-    bucket = "tf-state-data-platform-dev-477621"
+    bucket = var.tf_bucket
     prefix = "terraform/state"
   }
 }
