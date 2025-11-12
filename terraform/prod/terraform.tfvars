@@ -1,5 +1,4 @@
 project_id = "data-platform-prod-477621"
-tf_bucket = "tf-state-data-platform-prod-477621"
 env = "prod"
 multi_region = "EU"
 region = "europe-central2"
