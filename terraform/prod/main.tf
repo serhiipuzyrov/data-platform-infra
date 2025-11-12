@@ -52,3 +52,8 @@ module "access_management" {
   github_repo_dbt = var.github_repo_dbt
   depends_on = [module.project_setup]
 }
+
+module "monitoring" {
+  source = "../services/monitoring"
+  alert_email = "serhii.puzyrov@gmail.com"
+}

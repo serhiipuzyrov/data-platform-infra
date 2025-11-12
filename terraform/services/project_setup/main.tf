@@ -11,7 +11,8 @@ locals {
     "artifactregistry.googleapis.com",
     "run.googleapis.com",
     "secretmanager.googleapis.com",
-    "cloudbuild.googleapis.com"
+    "cloudbuild.googleapis.com",
+    "monitoring.googleapis.com"
   ]
 }
 
