@@ -8,3 +8,4 @@
 # other
 .venv
 .idea
+*.txt

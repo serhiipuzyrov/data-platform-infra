@@ -1,29 +1,4 @@
 #########################################
-# DBT Runner Service Account
-#########################################
-
-resource "google_service_account" "dbt_runner" {
-  account_id   = "dbt-runner"
-  display_name = "DBT Runner Service Account"
-  description  = "Service Account for running DBT jobs in ${var.env} environment"
-}
-
-locals {
-  dbt_sa_roles = [
-    "roles/bigquery.dataEditor",
-    "roles/bigquery.jobUser",
-    "roles/storage.objectViewer",
-  ]
-}
-
-resource "google_project_iam_member" "dbt_sa_roles" {
-  for_each = toset(local.dbt_sa_roles)
-  project  = var.project_id
-  role     = each.value
-  member   = "serviceAccount:${google_service_account.dbt_runner.email}"
-}
-
-#########################################
 # Artifact Registry (DBT image repo)
 #########################################
 
@@ -43,11 +18,9 @@ resource "google_cloud_run_v2_job" "dbt_job" {
   deletion_protection=false
   template {
     template {
-      service_account = google_service_account.dbt_runner.email
+      service_account = var.dbt_runner_email
       containers {
         image = "${var.region}-docker.pkg.dev/${var.project_id}/${google_artifact_registry_repository.dbt.repository_id}/dbt-image:latest"
-        command = ["dbt"]
-        args    = ["run", "--project-dir", "/dbt_project"]
         env {
           name  = "DBT_PROFILES_DIR"
           value = "/.dbt"
@@ -65,19 +38,8 @@ resource "google_cloud_run_v2_job" "dbt_job" {
   }
   # IAM Binding: allow Scheduler to trigger job
   depends_on = [
-    google_service_account.dbt_runner,
     google_artifact_registry_repository.dbt
   ]
-}
-
-#########################################
-# IAM Binding — allow Scheduler to run Cloud Run Job
-#########################################
-
-resource "google_project_iam_member" "scheduler_runner" {
-  project = var.project_id
-  role    = "roles/run.invoker"
-  member  = "serviceAccount:${google_service_account.dbt_runner.email}"
 }
 
 #########################################
@@ -93,7 +55,7 @@ resource "google_cloud_scheduler_job" "dbt_scheduler" {
     uri = "https://${var.region}-run.googleapis.com/apis/run.googleapis.com/v1/namespaces/${var.project_id}/jobs/${google_cloud_run_v2_job.dbt_job.name}:run"
     http_method = "POST"
     oauth_token {
-      service_account_email = google_service_account.dbt_runner.email
+      service_account_email = var.dbt_runner_email
     }
   }
   depends_on = [

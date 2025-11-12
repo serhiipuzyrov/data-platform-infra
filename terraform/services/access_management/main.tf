@@ -1,4 +1,7 @@
-# Terraform CI Service Account
+#########################################
+# Terraform Service Account and WIF
+#########################################
+
 resource "google_service_account" "terraform_sa" {
   account_id   = "terraform-sa"
   display_name = "Terraform GitHub Actions Service Account"
@@ -30,13 +33,16 @@ resource "google_project_iam_member" "terraform_sa_roles" {
 
 # Workload Identity Pool
 resource "google_iam_workload_identity_pool" "github_pool" {
+  lifecycle {prevent_destroy = true}
   project = var.project_id
   workload_identity_pool_id = "github-actions-pool"
   display_name              = "GitHub Actions Pool"
   description               = "OIDC pool for GitHub Actions"
 }
 
+# Workload Identity Provider
 resource "google_iam_workload_identity_pool_provider" "github_provider" {
+  lifecycle {prevent_destroy = true}
   project = var.project_id
   workload_identity_pool_id          = google_iam_workload_identity_pool.github_pool.workload_identity_pool_id
   workload_identity_pool_provider_id = "github-provider"
@@ -51,7 +57,7 @@ resource "google_iam_workload_identity_pool_provider" "github_provider" {
     "attribute.repository" = "assertion.repository"
     "attribute.ref"        = "assertion.ref"
   }
-  # Update attribute condition to allow multiple repositories
+  # Allow multiple repositories
   attribute_condition = "assertion.repository in ['${join("', '", local.allowed_repositories)}']"
 }
 
@@ -59,6 +65,42 @@ resource "google_iam_workload_identity_pool_provider" "github_provider" {
 resource "google_service_account_iam_member" "github_wif_binding" {
   for_each = toset(local.allowed_repositories)
   service_account_id = google_service_account.terraform_sa.name
-  role               = "roles/iam.workloadIdentityUser"
+  role = "roles/iam.workloadIdentityUser"
   member = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.github_pool.name}/attribute.repository/${each.value}"
 }
+
+#########################################
+# DBT Runner Service Account
+#########################################
+
+resource "google_service_account" "dbt_runner" {
+  account_id   = "dbt-runner"
+  display_name = "DBT Runner Service Account"
+  description  = "Service Account for running DBT jobs in ${var.env} environment"
+}
+
+locals {
+  dbt_sa_roles = [
+    "roles/bigquery.dataEditor",
+    "roles/bigquery.jobUser",
+    "roles/storage.objectViewer",
+    "roles/iam.serviceAccountTokenCreator",
+    "roles/run.invoker"
+  ]
+}
+
+resource "google_project_iam_member" "dbt_sa_roles" {
+  for_each = toset(local.dbt_sa_roles)
+  project  = var.project_id
+  role     = each.value
+  member   = "serviceAccount:${google_service_account.dbt_runner.email}"
+}
+
+resource "google_service_account_iam_member" "github_wif_dbt_runner" {
+  for_each = toset(local.allowed_repositories)
+  service_account_id = google_service_account.dbt_runner.name
+  role               = "roles/iam.workloadIdentityUser"
+  member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.github_pool.name}/attribute.repository/${each.value}"
+}
+
+
