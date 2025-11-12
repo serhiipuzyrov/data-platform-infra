@@ -25,3 +25,7 @@ variable "github_repo_infra" {
 variable "github_repo_dbt" {
   type = string
 }
+
+variable "alert_email" {
+  type = string
+}
