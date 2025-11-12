@@ -9,6 +9,9 @@ variable "region" {
 }
 
 variable "env" {
-  description = "Environment name (dev/prod)"
+  type        = string
+}
+
+variable "dbt_runner_email" {
   type        = string
 }

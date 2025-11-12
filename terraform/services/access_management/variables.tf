@@ -18,3 +18,7 @@ variable "github_repo_dbt" {
   type    = string
 }
 
+variable "env" {
+  type        = string
+}
+
