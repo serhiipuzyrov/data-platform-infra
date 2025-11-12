@@ -52,6 +52,3 @@ module "access_management" {
   github_repo_dbt = var.github_repo_dbt
   depends_on = [module.project_setup]
 }
-
-# module.workload_identity_federation.google_iam_workload_identity_pool.github_pool
-# module.workload_identity_federation.google_iam_workload_identity_pool_provider.github_provider

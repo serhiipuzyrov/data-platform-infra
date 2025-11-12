@@ -25,6 +25,10 @@ resource "google_cloud_run_v2_job" "dbt_job" {
           name  = "DBT_PROFILES_DIR"
           value = "/.dbt"
         }
+        env {
+          name  = "DBT_TARGET"
+          value = var.env
+        }
         resources {
           limits = {
             cpu    = "1"
