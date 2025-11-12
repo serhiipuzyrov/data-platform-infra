@@ -1,0 +1,48 @@
+# .github/ruleset.yml
+# Protects main branch and limits branch creation/push permissions
+
+rulesets:
+  - name: "Protect main branch"
+    target: branch
+    enforcement: active
+    conditions:
+      ref_name:
+        include:
+          - "main"
+    rules:
+      - type: required_pull_request
+        parameters:
+          dismiss_stale_reviews_on_push: true
+          require_code_owner_review: false
+          required_approving_review_count: 1
+          require_last_push_approval: true
+      - type: required_status_checks
+        parameters:
+          strict_required_status_checks_policy: true
+          required_status_checks:
+            - build
+            - test
+      - type: restrict_pushes
+        parameters:
+          push_allowances:
+            - actor_id: serhiipuzyrov
+      - type: restrict_bypasses
+        parameters:
+          bypass_allowances: []
+
+  - name: "Restrict branch creation"
+    target: branch
+    enforcement: active
+    conditions:
+      ref_name:
+        include:
+          - "*"
+    rules:
+      - type: restrict_creation
+        parameters:
+          creation_allowances:
+            - actor_id: serhiipuzyrov
+      - type: restrict_pushes
+        parameters:
+          push_allowances:
+            - actor_id: serhiipuzyrov

@@ -1,3 +1,7 @@
+#########################################
+# BigQuery datasets
+#########################################
+
 resource "google_bigquery_dataset" "raw" {
   dataset_id = "01_raw"
   location   = var.multi_region

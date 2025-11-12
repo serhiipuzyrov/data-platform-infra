@@ -1,3 +1,7 @@
+#########################################
+# APIs enabling
+#########################################
+
 locals {
   services = [
     "bigquery.googleapis.com",
@@ -16,9 +20,4 @@ resource "google_project_service" "services" {
   project  = var.project_id
   service  = each.value
   disable_on_destroy = false
-}
-
-output "enabled_services" {
-  description = "List of enabled API services"
-  value       = [for s in google_project_service.services : s.service]
 }
