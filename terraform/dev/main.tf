@@ -1,25 +1,3 @@
-terraform {
-  required_version = "1.13.5"
-  required_providers {
-    google = {
-      source = "hashicorp/google"
-      version = ">= 4.84.0"
-    }
-  }
-}
-
-provider "google" {
-  project = var.project_id
-  region = var.region
-}
-
-terraform {
-  backend "gcs" {
-    bucket = var.tf_bucket
-    prefix = "terraform/state"
-  }
-}
-
 module "project_setup" {
   source = "../services/project_setup"
   project_id = var.project_id
