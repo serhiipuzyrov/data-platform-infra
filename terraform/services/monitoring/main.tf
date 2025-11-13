@@ -8,10 +8,6 @@ resource "google_monitoring_notification_channel" "email_channel" {
   labels = {
     email_address = var.alert_email
   }
-  # Disable recovery notifications
-  user_labels = {
-    notify_on_recovery = "false"
-  }
 }
 
 resource "google_monitoring_alert_policy" "dbt_job_failure" {
@@ -40,6 +36,7 @@ resource "google_monitoring_alert_policy" "dbt_job_failure" {
   }
   notification_channels = [google_monitoring_notification_channel.email_channel.name]
   alert_strategy {
+    notification_prompts = ["OPENED"]
     auto_close = "86400s" # 24 hours
   }
 }
