@@ -40,10 +40,6 @@ resource "google_monitoring_alert_policy" "dbt_job_failure" {
   }
   notification_channels = [google_monitoring_notification_channel.email_channel.name]
   alert_strategy {
-    auto_close = "604800s" # 7 days
-  notification_channel_strategy {
-      renotify_interval = "0s"
-      notification_channel_names = [google_monitoring_notification_channel.email_channel.name]
-    }
+    auto_close = "86400s" # 24 hours
   }
 }
