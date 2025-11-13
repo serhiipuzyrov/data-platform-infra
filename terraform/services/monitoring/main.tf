@@ -1,11 +1,16 @@
 #########################################
 # DBT jobs monitoring and alerting
 #########################################
+
 resource "google_monitoring_notification_channel" "email_channel" {
   display_name = "DBT Job Failure Alert"
   type         = "email"
   labels = {
     email_address = var.alert_email
+  }
+  # Disable recovery notifications
+  user_labels = {
+    notify_on_recovery = "false"
   }
 }
 
@@ -36,5 +41,9 @@ resource "google_monitoring_alert_policy" "dbt_job_failure" {
   notification_channels = [google_monitoring_notification_channel.email_channel.name]
   alert_strategy {
     auto_close = "604800s" # 7 days
+  notification_channel_strategy {
+      renotify_interval = "0s"
+      notification_channel_names = [google_monitoring_notification_channel.email_channel.name]
+    }
   }
 }
