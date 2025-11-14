@@ -66,3 +66,26 @@ resource "google_cloud_scheduler_job" "dbt_scheduler" {
     google_cloud_run_v2_job.dbt_job
   ]
 }
+
+#########################################
+# DBT Docs Hosting on Cloud Storage
+#########################################
+
+resource "google_storage_bucket" "dbt_docs" {
+  name          = "dbt-docs-${var.project_id}" # must be globally unique
+  project       = var.project_id
+  location      = var.region
+  storage_class = "STANDARD"
+  website {
+    main_page_suffix = "index.html"
+    not_found_page   = "404.html"
+  }
+  uniform_bucket_level_access = true
+  force_destroy               = true
+}
+
+resource "google_storage_bucket_iam_member" "dbt_docs_public" {
+  bucket = google_storage_bucket.dbt_docs.name
+  role   = "roles/storage.objectViewer"
+  member = "allUsers"
+}

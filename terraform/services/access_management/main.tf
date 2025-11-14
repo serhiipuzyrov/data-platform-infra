@@ -16,7 +16,8 @@ locals {
     "roles/iam.workloadIdentityPoolAdmin",
     "roles/iam.serviceAccountTokenCreator",
     "roles/iam.serviceAccountUser",
-    "roles/storage.admin"
+    "roles/storage.admin",
+    "roles/storage.objectAdmin"
   ]
   allowed_repositories = [
     "${var.github_org}/${var.github_repo_infra}",
