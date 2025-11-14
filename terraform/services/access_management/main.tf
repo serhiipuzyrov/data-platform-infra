@@ -17,7 +17,8 @@ locals {
     "roles/iam.serviceAccountTokenCreator",
     "roles/iam.serviceAccountUser",
     "roles/storage.admin",
-    "roles/storage.objectAdmin"
+    "roles/storage.objectAdmin",
+    "roles/iap.admin"
   ]
   allowed_repositories = [
     "${var.github_org}/${var.github_repo_infra}",
@@ -96,12 +97,4 @@ resource "google_project_iam_member" "dbt_sa_roles" {
   role     = each.value
   member   = "serviceAccount:${google_service_account.dbt_runner.email}"
 }
-
-resource "google_service_account_iam_member" "github_wif_dbt_runner" {
-  for_each = toset(local.allowed_repositories)
-  service_account_id = google_service_account.dbt_runner.name
-  role               = "roles/iam.workloadIdentityUser"
-  member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.github_pool.name}/attribute.repository/${each.value}"
-}
-
 

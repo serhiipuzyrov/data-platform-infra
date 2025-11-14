@@ -12,7 +12,9 @@ locals {
     "run.googleapis.com",
     "secretmanager.googleapis.com",
     "cloudbuild.googleapis.com",
-    "monitoring.googleapis.com"
+    "monitoring.googleapis.com",
+    "iap.googleapis.com",
+    "cloudidentity.googleapis.com"
   ]
 }
 
