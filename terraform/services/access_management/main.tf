@@ -19,7 +19,7 @@ locals {
     "roles/storage.admin",
     "roles/storage.objectAdmin",
     "roles/iap.admin",
-    "roles/run.developer"
+    "roles/run.admin"
   ]
   allowed_repositories = [
     "${var.github_org}/${var.github_repo_infra}",
