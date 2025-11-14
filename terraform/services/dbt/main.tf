@@ -68,24 +68,40 @@ resource "google_cloud_scheduler_job" "dbt_scheduler" {
 }
 
 #########################################
-# DBT Docs Hosting on Cloud Storage
+# DBT Docs Hosting on Cloud Run
 #########################################
 
-resource "google_storage_bucket" "dbt_docs" {
-  name          = "dbt-docs-${var.project_id}" # must be globally unique
-  project       = var.project_id
-  location      = var.region
-  storage_class = "STANDARD"
-  website {
-    main_page_suffix = "index.html"
-    not_found_page   = "404.html"
+resource "google_cloud_run_v2_service" "dbt_docs" {
+  name     = "dbt-docs"
+  project  = var.project_id
+  location = var.region
+  provider = google-beta
+  launch_stage = "BETA"
+  ingress      = "INGRESS_TRAFFIC_ALL"
+  iap_enabled  = true
+  invoker_iam_disabled = true
+  scaling {
+    max_instance_count = 8
   }
-  uniform_bucket_level_access = true
-  force_destroy               = true
+  template {
+    containers {
+      image = "${var.region}-docker.pkg.dev/${var.project_id}/${google_artifact_registry_repository.dbt.repository_id}/dbt-docs-image:latest"
+    }
+  }
 }
 
-resource "google_storage_bucket_iam_member" "dbt_docs_public" {
-  bucket = google_storage_bucket.dbt_docs.name
-  role   = "roles/storage.objectViewer"
-  member = "allUsers"
+# Allow your Google Group to access via IAP
+resource "google_iap_web_iam_member" "dbt_docs_iap" {
+  project = var.project_id
+  role    = "roles/iap.httpsResourceAccessor"
+  member  = "group:dbt-docs-viewers@pipelinica.com"
+}
+
+# Allow IAP service account to call Cloud Run
+resource "google_cloud_run_v2_service_iam_member" "iap_to_run" {
+  project  = var.project_id
+  location = var.region
+  name  = google_cloud_run_v2_service.dbt_docs.name
+  role     = "roles/run.invoker"
+  member   = "serviceAccount:service-${var.project_number}@gcp-sa-iap.iam.gserviceaccount.com"
 }

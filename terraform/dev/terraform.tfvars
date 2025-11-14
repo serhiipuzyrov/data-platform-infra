@@ -1,4 +1,5 @@
 project_id = "data-platform-dev-477621"
+project_number = "823642180837"
 env = "dev"
 multi_region = "EU"
 region = "europe-central2"

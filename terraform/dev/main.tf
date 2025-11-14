@@ -14,6 +14,7 @@ module "bigquery" {
 module "dbt" {
   source = "../services/dbt"
   project_id = var.project_id
+  project_number = var.project_number
   region = var.region
   env = var.env
   dbt_runner_email = module.access_management.dbt_runner_email
