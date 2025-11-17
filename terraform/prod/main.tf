@@ -24,11 +24,14 @@ module "dbt" {
 module "access_management" {
   source = "../services/access_management"
   project_id = var.project_id
+  project_number = var.project_number
   region = var.region
   env = var.env
   github_org = var.github_org
   github_repo_infra = var.github_repo_infra
   github_repo_dbt = var.github_repo_dbt
+  organization_domain = var.organization_domain
+  dbt_docs_cloud_run_service_name = module.dbt.dbt_docs_cloud_run_service_name
   depends_on = [module.project_setup]
 }
 
