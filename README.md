@@ -21,13 +21,15 @@ This repository provides a ready-to-use infrastructure setup that includes:
 
 ### Global Settings
 
-| Parameter                | Value                 |
-|--------------------------|-----------------------|
-| **GitHub Account**       | `serhiipuzyrov`       |
-| **Terraform Repository** | `data-platform-infra` |
-| **DBT Repository**       | `data-platform-dbt`   |
-| **Multi-region**         | `EU`                  |
-| **Region**               | `europe-central2`     |
+| Parameter                       | Value                      |
+|---------------------------------|----------------------------|
+| **GitHub Account**              | `serhiipuzyrov`            |
+| **Terraform GitHub Repository** | `data-platform-infra`      |
+| **DBT GitHub Repository**       | `data-platform-dbt`        |
+| **Multi-region**                | `EU`                       |
+| **Region**                      | `europe-central2`          |
+| **Alert Email**                 | `serhii.puzyrov@gmail.com` |
+| **Organization Domain**         | `pipelinica.com`           |
 
 ### GCP Development Environment
 
