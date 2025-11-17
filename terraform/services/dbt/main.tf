@@ -6,6 +6,16 @@ resource "google_artifact_registry_repository" "dbt" {
   location      = var.region
   repository_id = "data-platform-dbt"
   format        = "DOCKER"
+  cleanup_policies {
+    id = "keep-latest-3"
+    action = "KEEP"
+    most_recent_versions {keep_count = 3}
+  }
+    cleanup_policies {
+    id = "delete"
+    action = "DELETE"
+    condition {older_than = "1s"}
+  }
 }
 
 ########################################
@@ -90,18 +100,4 @@ resource "google_cloud_run_v2_service" "dbt_docs" {
   }
 }
 
-# Allow your Google Group to access via IAP
-resource "google_iap_web_iam_member" "dbt_docs_iap" {
-  project = var.project_id
-  role    = "roles/iap.httpsResourceAccessor"
-  member  = "group:dbt-docs-viewers@pipelinica.com"
-}
 
-# Allow IAP service account to call Cloud Run
-resource "google_cloud_run_v2_service_iam_member" "iap_to_run" {
-  project  = var.project_id
-  location = var.region
-  name  = google_cloud_run_v2_service.dbt_docs.name
-  role     = "roles/run.invoker"
-  member   = "serviceAccount:service-${var.project_number}@gcp-sa-iap.iam.gserviceaccount.com"
-}

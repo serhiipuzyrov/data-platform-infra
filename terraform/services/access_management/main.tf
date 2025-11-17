@@ -99,3 +99,22 @@ resource "google_project_iam_member" "dbt_sa_roles" {
   member   = "serviceAccount:${google_service_account.dbt_runner.email}"
 }
 
+#########################################
+# DBT Docs IAP access via access group
+#########################################
+
+# Allow your Google Group dedicated for DBT docs viewers to access via IAP
+resource "google_iap_web_iam_member" "dbt_docs_iap" {
+  project = var.project_id
+  role    = "roles/iap.httpsResourceAccessor"
+  member  = "group:dbt-docs-viewers@${var.organization_domain}"
+}
+
+# Allow IAP service account to call Cloud Run
+resource "google_cloud_run_v2_service_iam_member" "iap_to_run" {
+  project  = var.project_id
+  location = var.region
+  name     = var.dbt_docs_cloud_run_service_name
+  role     = "roles/run.invoker"
+  member   = "serviceAccount:service-${var.project_number}@gcp-sa-iap.iam.gserviceaccount.com"
+}

@@ -33,3 +33,7 @@ variable "github_repo_dbt" {
 variable "alert_email" {
   type = string
 }
+
+variable "organization_domain" {
+  type = string
+}
