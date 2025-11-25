@@ -39,3 +39,9 @@ module "monitoring" {
   source = "../services/monitoring"
   alert_email = var.alert_email
 }
+
+module "cloud_storage" {
+  source = "../services/cloud_storage"
+  env = var.env
+  region = var.region
+}

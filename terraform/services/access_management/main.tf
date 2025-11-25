@@ -86,7 +86,7 @@ locals {
   dbt_sa_roles = [
     "roles/bigquery.dataEditor",
     "roles/bigquery.jobUser",
-    "roles/storage.objectViewer",
+    "roles/storage.admin",
     "roles/iam.serviceAccountTokenCreator",
     "roles/run.invoker"
   ]
